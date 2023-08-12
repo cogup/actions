@@ -34,13 +34,13 @@ runs:
       
       - name: Install dependencies Nodejs
         if: inputs.runtime == 'nodejs'
-        uses: cogup/actions/lambda@main/nodejs
+        uses: cogup/actions/lambda/nodejs@main
         with:
           context: ${{ inputs.context }}
       
       - name: Install dependencies Rust
         if: inputs.runtime == 'rust'
-        uses: cogup/actions/lambda@main/rust
+        uses: cogup/actions/lambda/rust@main
         with:
           context: ${{ inputs.context }}
 
