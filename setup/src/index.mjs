@@ -1,5 +1,4 @@
 import {
-    setStageVariables,
     getStackName,
     cameCaseToDash,
     getStageVariables
