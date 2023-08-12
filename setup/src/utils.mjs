@@ -18,6 +18,7 @@ export function dashToCamelCase(str) {
 
 export function getStageVariables() {
     const branch = process.env.BRANCH;
+    console.log(`Branch: ${branch}`)
     const stage = branch === 'main' ? 'prod' : branch === 'develop' ? 'dev' : dashToCamelCase(snackToCamelCase(branch));
     const stageUpperCase = stage.charAt(0).toUpperCase() + stage.slice(1);
 
