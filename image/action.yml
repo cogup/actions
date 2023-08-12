@@ -20,7 +20,7 @@ runs:
       # - name: Create ECR repository
       #   uses: ./actions/cdk
       #   with:
-      #     stack-name: ${{ env.STACK_NAME }}/${{ env.SERVICE_NAME }}Repository
+      #     stack-name: ${{ env.stack-name }}/${{ env.SERVICE_NAME }}Repository
       
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2

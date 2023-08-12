@@ -1,5 +1,0 @@
-watchs:
-  synthese_api: 'services/api-synthese-service'
-  lambda_listen_events: 'services/lambda-listen-events'
-  infra: 'infra'
-  all: '.github'

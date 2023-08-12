@@ -1,39 +1,23 @@
 import {
-    checkFolder,
     setStageVariables,
-    setVars,
-    setStackNameVariable,
-    setApiSyntheseServiceRepoName,
-    setLambdaArtifactoryBucketName,
-} from './handlers.mjs';
-import yaml from 'js-yaml';
-import fs from 'fs';
-import { fileURLToPath } from 'url';
-import path from 'path';
-import { getStackName } from './utils.mjs';
+    getStackName,
+    cameCaseToDash,
+    getStageVariables
+} from './utils.mjs';
+import core from '@actions/core';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const { stage, stageUpperCase } = getStageVariables();
 
-const dataPath = path.resolve(__dirname, '../data.yml');
-const data = yaml.load(fs.readFileSync(dataPath, 'utf8'));
-
-console.log(data)
-
-checkFolder(data.watchs);
-
-const { stage } = setStageVariables()
+core.setOutput('stage', stage);
+core.setOutput('stage-name', stageUpperCase);
 
 const projectName = process.env.PROJECT_NAME
 const stackName = getStackName(stage, projectName)
 
-setStackNameVariable(stackName)
+core.setOutput('stack-name', stackName);
 
-setApiSyntheseServiceRepoName(projectName)
+const bucketName = `${cameCaseToDash(projectName)}-lambda-artifacts`;
 
-setLambdaArtifactoryBucketName(projectName)
+console.log(`Setting repo name to ${bucketName}`);
 
-if (data.vars) {
-    setVars(data.vars)
-}
-
+core.setOutput('lambda-artifacts', bucketName);
