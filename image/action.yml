@@ -15,10 +15,10 @@ runs:
 
       - name: Aws Credentials
         id: aws
-        uses: ./actions/aws-credentials
+        uses: cogup/actions/aws-credentials@main
 
       # - name: Create ECR repository
-      #   uses: ./actions/cdk
+      #   uses: cogup/actions/cdk@main
       #   with:
       #     stack-name: ${{ env.stack-name }}/${{ env.SERVICE_NAME }}Repository
       

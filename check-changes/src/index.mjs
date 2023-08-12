@@ -2,7 +2,6 @@ import core from '@actions/core';
 import github from '@actions/github';
 const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
 
-
 export async function checkFolder(targetPath) {
     const commitMessage = await getMessageCommit()
 

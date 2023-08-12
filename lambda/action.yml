@@ -30,17 +30,17 @@ runs:
 
       - name: Aws Credentials
         id: aws
-        uses: ./actions/aws-credentials
+        uses: cogup/actions/aws-credentials@main
       
       - name: Install dependencies Nodejs
         if: inputs.runtime == 'nodejs'
-        uses: ./actions/lambda/nodejs
+        uses: cogup/actions/lambda@main/nodejs
         with:
           context: ${{ inputs.context }}
       
       - name: Install dependencies Rust
         if: inputs.runtime == 'rust'
-        uses: ./actions/lambda/rust
+        uses: cogup/actions/lambda@main/rust
         with:
           context: ${{ inputs.context }}
 
