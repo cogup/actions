@@ -7,7 +7,11 @@ inputs:
   context:
     description: 'CDK context'
     required: false
-    default: '{}'
+    default: '.'
+  ssh-public-key:
+    description: 'SSH public key'
+    required: false
+    default: ''
 runs:
   using: "composite"
   steps:
@@ -15,10 +19,10 @@ runs:
         uses: actions/checkout@v3
 
       - name: Create id_rsa.pub
-        if: ${{ secrets.SSH_PUBLIC_KEY }}
+        if: ${{ inputs.ssh-public-key }}
         shell: bash
         run: |
-          echo "${{ secrets.SSH_PUBLIC_KEY }}" > id_rsa.pub
+          echo "${{ inputs.SSH_PUBLIC_KEY }}" > id_rsa.pub
           chmod 400 id_rsa.pub
 
       - name: Aws Credentials
