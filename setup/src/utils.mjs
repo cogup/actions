@@ -17,28 +17,13 @@ export function dashToCamelCase(str) {
 }
 
 export function getStageVariables() {
-    try {
-        const branch = process.env.BRANCH;
-        const stage = branch === 'main' ? 'prod' : branch === 'develop' ? 'dev' : dashToCamelCase(snackToCamelCase(branch));
-        const stageUpperCase = stage.charAt(0).toUpperCase() + stage.slice(1);
+    const branch = process.env.BRANCH;
+    const stage = branch === 'main' ? 'prod' : branch === 'develop' ? 'dev' : dashToCamelCase(snackToCamelCase(branch));
+    const stageUpperCase = stage.charAt(0).toUpperCase() + stage.slice(1);
 
-        return {
-            stage,
-            stageUpperCase,
-        }
-    } catch (error) {
-        core.setFailed(error.message);
-    }
-}
-
-export function setVars(vars) {
-    try {
-        Object.entries(vars).forEach(([name, value]) => {
-            console.log(`Setting ${name} to ${value}`)
-            core.setOutput(name, value);
-        })
-    } catch (error) {
-        core.setFailed(error.message);
+    return {
+        stage,
+        stageUpperCase,
     }
 }
 
