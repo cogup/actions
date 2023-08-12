@@ -4,6 +4,10 @@ inputs:
   stack-name:
     description: 'Name of the stack'
     required: true
+  context:
+    description: 'CDK context'
+    required: false
+    default: '{}'
 runs:
   using: "composite"
   steps:
@@ -19,6 +23,6 @@ runs:
           AWS_ACCOUNT_ID: ${{ steps.aws.outputs.aws-account-id }}
         shell: bash
         run: |
-          cd infra
+          cd ${{ inputs.context }}
           npm install
           npm run cdk -- deploy ${{ inputs.stack-name }} --require-approval never
