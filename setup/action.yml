@@ -1,4 +1,4 @@
-name: Check Folder Action
+name: Setup
 description: Setup monorepo deployment
 outputs:
   stage:
