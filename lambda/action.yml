@@ -30,17 +30,17 @@ runs:
 
       - name: Aws Credentials
         id: aws
-        uses: ./.github/actions/aws-credentials
+        uses: ./actions/aws-credentials
       
       - name: Install dependencies Nodejs
         if: inputs.runtime == 'nodejs'
-        uses: ./.github/actions/lambda/nodejs
+        uses: ./actions/lambda/nodejs
         with:
           context: ${{ inputs.context }}
       
       - name: Install dependencies Rust
         if: inputs.runtime == 'rust'
-        uses: ./.github/actions/lambda/rust
+        uses: ./actions/lambda/rust
         with:
           context: ${{ inputs.context }}
 

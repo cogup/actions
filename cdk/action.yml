@@ -12,7 +12,7 @@ runs:
 
       - name: Aws Credentials
         id: aws
-        uses: ./.github/actions/aws-credentials
+        uses: ./actions/aws-credentials
 
       - name: Run CDK
         env:
