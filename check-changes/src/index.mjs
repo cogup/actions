@@ -6,7 +6,7 @@ const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
 export async function checkFolder(targetPath) {
     const commitMessage = await getMessageCommit()
 
-    if (commitMessage.includes('--deploy-all')) {
+    if (commitMessage.includes('--force-ci')) {
         return true;
     }
 
