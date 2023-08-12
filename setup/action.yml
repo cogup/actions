@@ -1,0 +1,22 @@
+name: Check Folder Action
+description: Setup monorepo deployment
+outputs:
+  synthese_api:
+    description: 'Status of the synthese_api folder'
+  lambda_listen_events:
+    description: 'Status of the lambda_listen_events folder'
+  infra:
+    description: 'Status of the infra folder'
+  stage:
+    description: 'Status of the stage folder'
+  stage_name:
+    description: 'Name of the stage'
+  stack_name:
+    description: 'Name of the stack'
+  synthese_api_repo_name:
+    description: 'Name of the synthese_api repository'
+  lambda_artifactory_bucket_name:
+    description: 'Suffix of the lambda_artifactory_bucket_name'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'

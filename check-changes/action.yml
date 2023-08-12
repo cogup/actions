@@ -1,0 +1,14 @@
+name: Check changes
+description: Check changes
+inputs:
+  path:
+    description: 'Path to check'
+    required: true
+outputs:
+  changed:
+    description: 'true if changes are detected, false otherwise'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.path }}

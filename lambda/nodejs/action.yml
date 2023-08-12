@@ -1,0 +1,12 @@
+# action.yml
+name: 'Build Nodejs'
+description: 'Build Nodejs'
+inputs:
+  context:
+    description: 'Path to the lambda function'
+    required: true
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.context }}

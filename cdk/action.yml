@@ -1,0 +1,24 @@
+name: 'CDK'
+description: 'Run CDK'
+inputs:
+  stack-name:
+    description: 'Name of the stack'
+    required: true
+runs:
+  using: "composite"
+  steps:
+      - name: Git clone the repository
+        uses: actions/checkout@v3
+
+      - name: Aws Credentials
+        id: aws
+        uses: ./.github/actions/aws-credentials
+
+      - name: Run CDK
+        env:
+          AWS_ACCOUNT_ID: ${{ steps.aws.outputs.aws-account-id }}
+        shell: bash
+        run: |
+          cd infra
+          npm install
+          npm run cdk -- deploy ${{ inputs.stack-name }} --require-approval never

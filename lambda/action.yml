@@ -1,0 +1,54 @@
+name: 'Lambda Deploy'
+description: 'Deploy lambda'
+inputs:
+  repository-name:
+    description: 'Name of the repository'
+    required: true
+  context:
+    description: 'Path to the lambda function'
+    required: true
+  function-name:
+    description: 'Name of the lambda function'
+    required: true
+  service-name:
+    description: 'Name of the service'
+    required: true
+  runtime:
+    description: 'Runtime of the lambda function'
+    required: true
+  version:
+    description: 'Version of the lambda function'
+    required: true
+  stage-name:
+    description: 'Stage name of the lambda function'
+    required: true
+runs:
+  using: "composite"
+  steps:
+      - name: Git clone the repository
+        uses: actions/checkout@v3
+
+      - name: Aws Credentials
+        id: aws
+        uses: ./.github/actions/aws-credentials
+      
+      - name: Install dependencies Nodejs
+        if: inputs.runtime == 'nodejs'
+        uses: ./.github/actions/lambda/nodejs
+        with:
+          context: ${{ inputs.context }}
+      
+      - name: Install dependencies Rust
+        if: inputs.runtime == 'rust'
+        uses: ./.github/actions/lambda/rust
+        with:
+          context: ${{ inputs.context }}
+
+      - name: Upload to S3
+        shell: bash
+        run: |
+          aws s3 cp ${{ inputs.context }}/function.zip s3://${{ inputs.repository-name }}/${{ inputs.service-name }}/${{ inputs.function-name }}/${{ inputs.version }}.zip
+          aws s3 cp ${{ inputs.context }}/function.zip s3://${{ inputs.repository-name }}/${{ inputs.service-name }}/${{ inputs.function-name }}/latest.zip
+          aws s3 cp ${{ inputs.context }}/function.zip s3://${{ inputs.repository-name }}/${{ inputs.service-name }}/${{ inputs.function-name }}/${{ inputs.stage-name }}.zip
+
+  

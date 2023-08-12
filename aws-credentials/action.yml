@@ -1,0 +1,17 @@
+name: 'Aws Credentials'
+description: 'Configure AWS credentials'
+outputs:
+  aws-account-id:
+    description: 'AWS Account ID'
+    value: ${{ steps.aws.outputs.aws-account-id }}
+runs:
+  using: "composite"
+  steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2.2.0
+        id: aws
+        with:
+          role-to-assume: ${{ env.ROLE_TO_ASSUME }}
+          role-session-name: ${{ env.ROLE_SESSION_NAME }}
+          aws-region: ${{ env.AWS_REGION }}
+          
