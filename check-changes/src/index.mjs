@@ -5,27 +5,11 @@ export async function checkFolder(targetPath) {
     const commitMessage = await getMessageCommit()
 
     if (commitMessage.includes('--deploy-all')) {
-        console.log('Commit message contains --deploy-all, skipping folder check');
-        Object.keys(foldersToCheck).forEach((name) => {
-            if (name === 'all') {
-                return;
-            }
-
-            core.setOutput(name, true);
-        })
-        return;
+        return true;
     }
 
     if (commitMessage.includes('--no-ci')) {
-        console.log('Commit message contains --no-ci, skipping conventional commit check');
-        Object.keys(foldersToCheck).forEach((name) => {
-            if (name === 'all') {
-                return;
-            }
-
-            core.setOutput(name, false);
-        })
-        return;
+        return false;
     }
 
     const changedFiles = await getChangedFiles();
