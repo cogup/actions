@@ -1,5 +1,7 @@
 import core from '@actions/core';
 import github from '@actions/github';
+const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
+
 
 export async function checkFolder(targetPath) {
     const commitMessage = await getMessageCommit()
@@ -24,8 +26,6 @@ export async function checkFolder(targetPath) {
 }
 
 export async function getMessageCommit() {
-    const token = process.env.GITHUB_TOKEN;
-    const octokit = github.getOctokit(token);
     const { owner, repo } = github.context.repo;
     const sha = github.context.sha;
 
@@ -39,9 +39,6 @@ export async function getMessageCommit() {
 }
 
 export async function getChangedFiles() {
-    const token = process.env.GITHUB_TOKEN;
-    const octokit = github.getOctokit(token);
-
     const { owner, repo } = github.context.repo;
     const beforeSha = github.context.payload.before;
     const afterSha = github.context.payload.after;
@@ -61,11 +58,9 @@ export async function getChangedFiles() {
     return files;
 }
 
-// get args
 const targetPath = process.argv[2];
 
 console.log('Checking folder: ', targetPath);
-// get args
 
 checkFolder(targetPath).then((changed) => {
     core.setOutput('changed', changed);
