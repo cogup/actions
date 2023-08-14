@@ -16,21 +16,22 @@ runs:
         id: get_version
         shell: bash
         run: |
-          if [ ${{ inputs.version != '' }} ]
+          if [ -n "${{ inputs.version }}" ]; then
             echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT
           elif [ -f package.json ]; then
             echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
           elif [ -f Cargo.toml ]; then
-            echo "version=$(grep -m1 -oP '(?<=version = ")[^"]*' Cargo.toml)" >> $GITHUB_OUTPUT
+            echo "version=$(grep -m1 -oP '(?<=version = \")[^\"]*' Cargo.toml)" >> $GITHUB_OUTPUT
           elif [ -f setup.py ]; then
             echo "version=$(grep -m1 -oP '(?<=version=\")[^\"]*' setup.py)" >> $GITHUB_OUTPUT
           elif [ -f version.txt ]; then
             echo "version=$(cat version.txt)" >> $GITHUB_OUTPUT
           elif [ -f VERSION.txt ]; then
             echo "version=$(cat VERSION.txt)" >> $GITHUB_OUTPUT
-          else [ -f VERSION.md ]; then
+          elif [ -f VERSION.md ]; then
             echo "version=$(cat VERSION.md)" >> $GITHUB_OUTPUT
           fi
+
 
       - name: Commit Changes to Main Branch
         shell: bash
