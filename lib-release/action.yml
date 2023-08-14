@@ -37,6 +37,7 @@ runs:
 
       - name: Check tag exists
         shell: bash
+        id: tag_exists
         run: |
           if [ -n "${{ inputs.version }}" ]; then
             if [ -n "$(git tag -l v${{ inputs.version }})" ]; then
@@ -50,7 +51,7 @@ runs:
 
 
       - name: Commit Changes to Main Branch
-        if: steps.get_version.outputs.tag_exists == 'false'
+        if: steps.tag_exists.outputs.tag_exists == 'false'
         shell: bash
         run: |
           git config --local user.email "actions@github.com"
@@ -71,7 +72,7 @@ runs:
           git push origin main --tags
 
       - name: Create Release
-        if: steps.get_version.outputs.tag_exists == 'false'
+        if: steps.tag_exists.outputs.tag_exists == 'false'
         shell: bash
         run: |
           gh release create ${{ steps.get_version.outputs.version }} --title "Release ${{ steps.get_version.outputs.version }}" --notes "Release ${{ steps.get_version.outputs.version }}" --repo ${{ github.repository }} --target main
