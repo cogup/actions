@@ -18,17 +18,17 @@ runs:
         run: |
           if [ ${{ inputs.version != '' }} ]
             echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT
-          else if [ -f package.json ]; then
+          elif [ -f package.json ]; then
             echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
-          else if [ -f Cargo.toml ]; then
+          elif [ -f Cargo.toml ]; then
             echo "version=$(grep -m1 -oP '(?<=version = ")[^"]*' Cargo.toml)" >> $GITHUB_OUTPUT
-          else if [ -f setup.py ]; then
+          elif [ -f setup.py ]; then
             echo "version=$(grep -m1 -oP '(?<=version=\")[^\"]*' setup.py)" >> $GITHUB_OUTPUT
-          else if [ -f version.txt ]; then
+          elif [ -f version.txt ]; then
             echo "version=$(cat version.txt)" >> $GITHUB_OUTPUT
-          else if [ -f VERSION.txt ]; then
+          elif [ -f VERSION.txt ]; then
             echo "version=$(cat VERSION.txt)" >> $GITHUB_OUTPUT
-          else if [ -f VERSION.md ]; then
+          else [ -f VERSION.md ]; then
             echo "version=$(cat VERSION.md)" >> $GITHUB_OUTPUT
           fi
 
