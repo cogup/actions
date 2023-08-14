@@ -8,7 +8,7 @@ inputs:
     required: true
   force-add:
     description: 'Force files or directories to be added to the release'
-    default: []
+    default: ''
 outputs:
   changed:
     description: 'true if changes are detected, false otherwise'
@@ -44,11 +44,12 @@ runs:
           git remote set-url origin https://x-access-token:${{ inputs.github-token }}@github.com/${{ github.repository }}
           git checkout -b v${{ steps.get_version.outputs.version }}
           git add --all
-          if [ -n "${{ inputs.force-add }}" ]; then
-            for file in ${{ inputs.force-add }}; do
-              git add -f $file
-            done
-          fi
+
+          IFS=$'\n' read -rd '' -a files_to_add <<< "${{ inputs.force-add }}"
+          for file in "${files_to_add[@]}"; do
+            git add -f "$file"
+          done
+
           git commit -m "Release ${{ steps.get_version.outputs.version }}"
           git tag ${{ steps.get_version.outputs.version }}
           git push origin main --tags
