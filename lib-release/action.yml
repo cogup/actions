@@ -6,6 +6,9 @@ inputs:
   github-token:
     description: 'The GitHub token to use for authentication'
     required: true
+  force-add:
+    description: 'Force files or directories to be added to the release'
+    default: []
 outputs:
   changed:
     description: 'true if changes are detected, false otherwise'
@@ -41,16 +44,15 @@ runs:
           git remote set-url origin https://x-access-token:${{ inputs.github-token }}@github.com/${{ github.repository }}
           git checkout -b v${{ steps.get_version.outputs.version }}
           git add --all
-          git commit -m "Release v${{ steps.get_version.outputs.version }}"
-          git tag v${{ steps.get_version.outputs.version }}
+          if [ -n "${{ inputs.force-add }}" ]; then
+            for file in ${{ inputs.force-add }}; do
+              git add -f $file
+            done
+          fi
+          git commit -m "Release ${{ steps.get_version.outputs.version }}"
+          git tag ${{ steps.get_version.outputs.version }}
           git push origin main --tags
 
       - name: Create Release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ inputs.github-token }}
-        with:
-          tag_name: ${{ steps.get_version.outputs.version }}
-          release_name: Release ${{ steps.get_version.outputs.version }}
-          draft: false
-          prerelease: false
+        run: |
+          gh release create ${{ steps.get_version.outputs.version }} --title "Release ${{ steps.get_version.outputs.version }}" --notes "Release ${{ steps.get_version.outputs.version }}" --repo ${{ github.repository }} --target main
