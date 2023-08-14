@@ -50,8 +50,10 @@ runs:
           #   git add -f "$file"
           # done
 
-          git status
-          git commit -m "Release ${{ steps.get_version.outputs.version }}"
+          if git status --porcelain | grep -q .; then
+            git commit -m "Release ${{ steps.get_version.outputs.version }}"
+          fi
+
           git tag ${{ steps.get_version.outputs.version }}
           git push origin main --tags
 
