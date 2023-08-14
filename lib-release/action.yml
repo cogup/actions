@@ -1,0 +1,53 @@
+name: Nodejs Release
+description: 'Checks if a new release is available for a Nodejs package'
+inputs:
+  version:
+    description: 'The version of the package'
+outputs:
+  changed:
+    description: 'true if changes are detected, false otherwise'
+runs:
+  using: "composite"
+  steps:
+      - name: Get App Version
+        id: get_version
+        shell: bash
+        run: |
+          if [ ${{ inputs.version != '' }} ]
+            echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT
+          else if [ -f package.json ]; then
+            echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+          else if [ -f Cargo.toml ]; then
+            echo "version=$(grep -m1 -oP '(?<=version = ")[^"]*' Cargo.toml)" >> $GITHUB_OUTPUT
+          else if [ -f setup.py ]; then
+            echo "version=$(grep -m1 -oP '(?<=version=\")[^\"]*' setup.py)" >> $GITHUB_OUTPUT
+          else if [ -f version.txt ]; then
+            echo "version=$(cat version.txt)" >> $GITHUB_OUTPUT
+          else if [ -f VERSION.txt ]; then
+            echo "version=$(cat VERSION.txt)" >> $GITHUB_OUTPUT
+          else if [ -f VERSION.md ]; then
+            echo "version=$(cat VERSION.md)" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit Changes to Main Branch
+        shell: bash
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          git checkout -b v${{ steps.get_version.outputs.version }}
+          git add --all
+          git commit -m "Release v${{ steps.get_version.outputs.version }}"
+          git tag v${{ steps.get_version.outputs.version }}
+          git push origin main --tags
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.get_version.outputs.version }}
+          release_name: Release ${{ steps.get_version.outputs.version }}
+          draft: false
+          prerelease: false
