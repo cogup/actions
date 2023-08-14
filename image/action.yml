@@ -13,13 +13,9 @@ runs:
       - name: Git clone the repository
         uses: actions/checkout@v3
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2.2.0
+      - name: Aws Credentials
         id: aws
-        with:
-          role-to-assume: ${{ env.ROLE_TO_ASSUME }}
-          role-session-name: ${{ env.ROLE_SESSION_NAME }}
-          aws-region: ${{ env.AWS_REGION }}
+        uses: cogup/actions/aws-credentials@main
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2

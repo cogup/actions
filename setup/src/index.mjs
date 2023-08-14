@@ -16,3 +16,4 @@ core.setOutput('stage', stage);
 core.setOutput('stage-name', stageUpperCase);
 core.setOutput('stack-name', stackName);
 core.setOutput('lambda-artifacts', bucketName);
+core.setOutput('project-name', projectName.toLowerCase());
