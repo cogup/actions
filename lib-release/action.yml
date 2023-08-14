@@ -45,10 +45,9 @@ runs:
           git checkout -b v${{ steps.get_version.outputs.version }}
           git add .
 
-          # IFS=$'\n' read -rd '' -a files_to_add <<< "${{ inputs.force-add }}"
-          # for file in "${files_to_add[@]}"; do
-          #   git add -f "$file"
-          # done
+          if [ -n "${{ inputs.force-add }}" ]; then
+            git add -f ${{ inputs.force-add }}
+          fi
 
           if git status --porcelain | grep -q .; then
             git commit -m "Release ${{ steps.get_version.outputs.version }}"
