@@ -18,6 +18,11 @@ runs:
       - name: Git clone the repository
         uses: actions/checkout@v3
 
+      - name: Set Up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
       - name: Create id_rsa.pub
         if: ${{ inputs.ssh-public-key }}
         shell: bash
