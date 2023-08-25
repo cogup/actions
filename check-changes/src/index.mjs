@@ -10,7 +10,7 @@ export async function checkFolder(targetPath) {
     }
 
     if (commitMessage.includes('--force-ci-path:')) {
-        const forcePath = commitMessage.split('--force-ci-path:')[1].split('--')[0].trim();
+        const forcePath = commitMessage.split('--force-ci-path:')[1].split(' ')[0].trim();
 
         if (forcePath === targetPath) {
             return true;
