@@ -17,6 +17,14 @@ export async function checkFolder(targetPath) {
         }
     }
 
+    if (commitMessage.includes('--no-ci-path:')) {
+        const forcePath = commitMessage.split('--no-ci-path:')[1].split(' ')[0].trim();
+
+        if (forcePath === targetPath) {
+            return false;
+        }
+    }
+
     if (commitMessage.includes('--no-ci')) {
         return false;
     }
