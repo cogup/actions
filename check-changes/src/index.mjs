@@ -4,30 +4,31 @@ const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
 
 export async function checkFolder(targetPath) {
     const commitMessage = await getMessageCommit()
+    const commands = commitMessage.split(' ')
 
     console.log('Commit message: ', commitMessage);
 
-    if (commitMessage.includes('--force-ci')) {
-        console.log("Forcing CI")
-        return true;
-    }
-
-    if (commitMessage.includes('--force-ci-path:')) {
+    if (commands.includes('--force-ci-path:')) {
         console.log("Forcing CI for path")
-        const forcePath = commitMessage.split('--force-ci-path:')[1].split(' ')[0].trim();
+        const forcePath = commands.split('--force-ci-path:')[1].split(' ')[0].trim();
 
         if (forcePath === targetPath) {
             return true;
         }
     }
 
-    if (commitMessage.includes('--no-ci-path:')) {
+    if (commands.includes('--no-ci-path:')) {
         console.log("Forcing no CI for path")
         const forcePath = commitMessage.split('--no-ci-path:')[1].split(' ')[0].trim();
 
         if (forcePath === targetPath) {
             return false;
         }
+    }
+
+    if (commitMessage.includes('--force-ci')) {
+        console.log("Forcing CI")
+        return true;
     }
 
     if (commitMessage.includes('--no-ci')) {
