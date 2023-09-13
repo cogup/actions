@@ -5,11 +5,15 @@ const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
 export async function checkFolder(targetPath) {
     const commitMessage = await getMessageCommit()
 
+    console.log('Commit message: ', commitMessage);
+
     if (commitMessage.includes('--force-ci')) {
+        console.log("Forcing CI")
         return true;
     }
 
     if (commitMessage.includes('--force-ci-path:')) {
+        console.log("Forcing CI for path")
         const forcePath = commitMessage.split('--force-ci-path:')[1].split(' ')[0].trim();
 
         if (forcePath === targetPath) {
@@ -18,6 +22,7 @@ export async function checkFolder(targetPath) {
     }
 
     if (commitMessage.includes('--no-ci-path:')) {
+        console.log("Forcing no CI for path")
         const forcePath = commitMessage.split('--no-ci-path:')[1].split(' ')[0].trim();
 
         if (forcePath === targetPath) {
@@ -26,6 +31,7 @@ export async function checkFolder(targetPath) {
     }
 
     if (commitMessage.includes('--no-ci')) {
+        console.log("Forcing no CI")
         return false;
     }
 
@@ -33,9 +39,12 @@ export async function checkFolder(targetPath) {
 
     for (let i = 0; i < changedFiles.length; i++) {
         if (changedFiles[i].startsWith(targetPath)) {
+            console.log('Found changed file: ', changedFiles[i]);
             return true
         }
     }
+
+    console.log('No changed files found');
 
     return false
 }
