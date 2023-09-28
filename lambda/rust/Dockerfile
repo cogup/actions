@@ -1,6 +1,12 @@
 ARG RUST_VERSION=1.70.0
 FROM rust:${RUST_VERSION}
 
+WORKDIR /github/workspace
+
+RUN apt-get install -y \
+    build-essential \
+    zip
+
 RUN set -eux; \
     rustup toolchain install stable; \
     rustup target install x86_64-unknown-linux-gnu aarch64-unknown-linux-gnu;
