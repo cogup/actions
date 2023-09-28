@@ -3,6 +3,7 @@ FROM rust:${RUST_VERSION}
 
 WORKDIR /github/workspace
 
+RUN apt-get update
 RUN apt-get install -y \
     build-essential \
     zip
