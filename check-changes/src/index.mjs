@@ -1,11 +1,13 @@
 import core from '@actions/core';
 import github from '@actions/github';
 const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
+const version = require('../package.json').version;
 
 export async function checkFolder(targetPath) {
     const commitMessage = await getMessageCommit()
     const commands = commitMessage.split(' ')
 
+    console.log("Version: ", version)
     console.log('Commit message: ', commitMessage);
 
     if (commands.includes('--force-ci-path:')) {
