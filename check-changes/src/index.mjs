@@ -13,6 +13,7 @@ export async function checkFolder(targetPath) {
         const forcePath = commands.split('--force-ci-path:')[1].split(' ')[0].trim();
 
         if (forcePath === targetPath) {
+            console.log("Forcing CI for path found: " + forcePath)
             return true;
         }
     } else if (commitMessage.includes('--force-ci')) {
