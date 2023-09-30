@@ -15,6 +15,9 @@ export async function checkFolder(targetPath) {
         if (forcePath === targetPath) {
             return true;
         }
+    } else if (commitMessage.includes('--force-ci')) {
+        console.log("Forcing CI")
+        return true;
     }
 
     if (commands.includes('--no-ci-path:')) {
@@ -24,14 +27,7 @@ export async function checkFolder(targetPath) {
         if (forcePath === targetPath) {
             return false;
         }
-    }
-
-    if (commitMessage.includes('--force-ci')) {
-        console.log("Forcing CI")
-        return true;
-    }
-
-    if (commitMessage.includes('--no-ci')) {
+    } else if (commitMessage.includes('--no-ci')) {
         console.log("Forcing no CI")
         return false;
     }
