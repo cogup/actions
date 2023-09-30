@@ -21,7 +21,8 @@ async function checkFolder(targetPath) {
         return true
     }
 
-    for (const forcePath in commands["force-ci-path"]) {
+    for (let i = 0; i < commands["force-ci-path"].length; i++) {
+        const forcePath = commands["force-ci-path"][i]
         if (forcePath === targetPath) {
             console.log("Forcing CI for path found: " + forcePath)
             return true
@@ -33,7 +34,8 @@ async function checkFolder(targetPath) {
         return false
     }
 
-    for (const noPath in commands["no-ci-path"]) { 
+    for (let i = 0; i < commands["no-ci-path"].length; i++) {
+        const noPath = commands["no-ci-path"][i]
         if (noPath === targetPath) {
             console.log("No CI for path found: " + noPath)
             return false
