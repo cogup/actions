@@ -2,45 +2,44 @@ import core from '@actions/core';
 import github from '@actions/github';
 const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
 
-export async function checkFolder(targetPath) {
+const options = {
+    "force-ci-path": [],
+    "force-ci": false,
+    "no-ci-path": [],
+    "no-ci": false
+}
+
+async function checkFolder(targetPath) {
     const commitMessage = await getMessageCommit()
-    const commands = commitMessage.split(' ')
+    const commands = getArgs(commitMessage, options)
 
     console.log('Commit message: ', commitMessage);
 
-    if (commands.includes('--force-ci-path')) {
-        console.log("Forcing CI for path")
-        const forcePath = commands.split('--force-ci-path:')[1].split(' ')[0].trim();
+    if (commands["force-ci"] === true) {
+        console.log("Forcing CI")
+        return true
+    }
 
+    for (const forcePath in commands["force-ci-path"]) {
         if (forcePath === targetPath) {
             console.log("Forcing CI for path found: " + forcePath)
-            return true;
+            return true
         }
-
-        console.log("Forcing CI for path not found: " + forcePath)
-    }
-    
-    if (!commands.includes('--force-ci-path') && commitMessage.includes('--force-ci-all')) {
-        console.log("Forcing CI")
-        return true;
     }
 
-    if (commands.includes('--no-ci-path')) {
-        console.log("Forcing no CI for path")
-        const forcePath = commitMessage.split('--no-ci-path:')[1].split(' ')[0].trim();
+    if (commands["no-ci"] === true) {
+        console.log("No CI found")
+        return false
+    }
 
-        if (forcePath === targetPath) {
-            console.log("Forcing no CI for path found: " + forcePath)
-            return false;
+    for (const noPath in commands["no-ci-path"]) { 
+        if (noPath === targetPath) {
+            console.log("No CI for path found: " + noPath)
+            return false
         }
+    }
 
-        console.log("Forcing no CI for path not found: " + forcePath)
-    }
-    
-    if (!commands.includes('--no-ci-path') && commitMessage.includes('--no-ci-all')) {
-        console.log("Forcing no CI")
-        return false;
-    }
+    console.log('Checking for changed files')
 
     const changedFiles = await getChangedFiles();
 
@@ -56,7 +55,7 @@ export async function checkFolder(targetPath) {
     return false
 }
 
-export async function getMessageCommit() {
+async function getMessageCommit() {
     const { owner, repo } = github.context.repo;
     const sha = github.context.sha;
 
@@ -69,7 +68,7 @@ export async function getMessageCommit() {
     return commitResponse.data.commit.message;
 }
 
-export async function getChangedFiles() {
+async function getChangedFiles() {
     const { owner, repo } = github.context.repo;
     const beforeSha = github.context.payload.before;
     const afterSha = github.context.payload.after;
@@ -87,6 +86,30 @@ export async function getChangedFiles() {
     });
 
     return files;
+}
+
+function getArgs(commitMessage, defaultArgs) {
+    const commands = commitMessage.split(' ')
+    const args = defaultArgs
+
+    commands.forEach((command) => {
+        if (command.indexOf('--') === 0) {
+            const comm = command.split(":")
+            const key = comm[0].replace('--', '');
+
+            console.log(comm, args[key])
+
+            if (args[key] !== undefined) {
+                if (comm[1] !== undefined) {
+                    args[key].push(comm[1])
+                } else {
+                    args[key] = true
+                }
+            }
+        }
+    })
+
+    return args
 }
 
 const targetPath = process.argv[2];
