@@ -1,16 +1,14 @@
 import core from '@actions/core';
 import github from '@actions/github';
 const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
-const version = require('../package.json').version;
 
 export async function checkFolder(targetPath) {
     const commitMessage = await getMessageCommit()
     const commands = commitMessage.split(' ')
 
-    console.log("Version: ", version)
     console.log('Commit message: ', commitMessage);
 
-    if (commands.includes('--force-ci-path:')) {
+    if (commands.includes('--force-ci-path')) {
         console.log("Forcing CI for path")
         const forcePath = commands.split('--force-ci-path:')[1].split(' ')[0].trim();
 
@@ -25,7 +23,7 @@ export async function checkFolder(targetPath) {
         return true;
     }
 
-    if (commands.includes('--no-ci-path:')) {
+    if (commands.includes('--no-ci-path')) {
         console.log("Forcing no CI for path")
         const forcePath = commitMessage.split('--no-ci-path:')[1].split(' ')[0].trim();
 
