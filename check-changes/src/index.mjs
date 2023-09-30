@@ -14,6 +14,7 @@ async function checkFolder(targetPath) {
     const commands = getArgs(commitMessage, options)
 
     console.log('Commit message: ', commitMessage);
+    console.log(commands)
 
     if (commands["force-ci"] === true) {
         console.log("Forcing CI")
