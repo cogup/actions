@@ -7,6 +7,8 @@ outputs:
     description: 'Name of the stage'
   stack-name:
     description: 'Name of the stack'
+  stack-name-no-stage:
+    description: 'Name of the stack without stage'
   lambda-artifacts:
     description: 'Suffix of the lambda-artifacts'
   project-name:

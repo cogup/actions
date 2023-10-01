@@ -2,11 +2,11 @@ export function cameCaseToDash(str) {
     return str.charAt(0).toLocaleLowerCase() + str.slice(1).replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
 }
 
-export function getStackName(stage, project) {
-    const fixProjext = snackToCamelCase(dashToCamelCase(project));
-    const stageName = stage.charAt(0).toUpperCase() + stage.slice(1);
-    const projectName = fixProjext.charAt(0).toUpperCase() + fixProjext.slice(1);
-    return `${projectName}${stageName}`;
+export function getStackName(project, stage) {
+    const fixName = snackToCamelCase(dashToCamelCase(project));
+    const stackName = fixName.charAt(0).toUpperCase() + fixName.slice(1);
+    const stageName = stage ? stage.charAt(0).toUpperCase() + stage.slice(1) : '';
+    return `${stackName}${stageName}`;
 }
 
 export function snackToCamelCase(str) {
