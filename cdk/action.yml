@@ -41,4 +41,5 @@ runs:
         run: |
           cd ${{ inputs.context }}
           npm install
+          npm run cdk -- synth
           npm run cdk -- deploy ${{ inputs.stack-name }} --require-approval never
