@@ -3,8 +3,9 @@ export function cameCaseToDash(str) {
 }
 
 export function getStackName(stage, project) {
+    const fixProjext = snackToCamelCase(dashToCamelCase(project));
     const stageName = stage.charAt(0).toUpperCase() + stage.slice(1);
-    const projectName = project.charAt(0).toUpperCase() + project.slice(1);
+    const projectName = fixProjext.charAt(0).toUpperCase() + fixProjext.slice(1);
     return `${projectName}${stageName}`;
 }
 

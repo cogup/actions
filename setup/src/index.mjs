@@ -7,7 +7,7 @@ import core from '@actions/core';
 
 const { stage, stageUpperCase } = getStageVariables();
 const projectName = cameCaseToDash(process.env.PROJECT_NAME)
-const stackName = getStackName(stage, projectName)
+const stackName = getStackName(stage, process.env.PROJECT_NAME)
 const bucketName = `${projectName}-lambda-artifacts`;
 
 console.log(`Setting repo name to ${bucketName}`);
