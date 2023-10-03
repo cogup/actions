@@ -9,6 +9,6 @@ outputs:
     description: 'true if changes are detected, false otherwise'
 runs:
   using: 'docker'
-  image: 'Dockerfile'
+  image: 'docker://ghcr.io/cogup/actions/check-changes:main'
   args:
     - ${{ inputs.path }}

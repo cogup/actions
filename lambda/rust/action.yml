@@ -7,6 +7,6 @@ inputs:
     required: true
 runs:
   using: 'docker'
-  image: 'Dockerfile'
+  image: 'docker://ghcr.io/cogup/actions/lambda-rust:main'
   args:
     - ${{ inputs.context }}
