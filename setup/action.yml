@@ -15,4 +15,4 @@ outputs:
     description: 'Name of the project'
 runs:
   using: 'docker'
-  image: 'ghcr.io/cogup/actions/setup:main'
+  image: 'docker://ghcr.io/cogup/actions/setup:main'
