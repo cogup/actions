@@ -26,6 +26,6 @@ jobs:
     - name: Build and push Docker image
       uses: docker/build-push-action@v5
       with:
-        context: lambda/nodejs
+        context: cogup/actions-lambda-nodejs
         push: true
-        tags: ghcr.io/${{ github.repository_owner }}/actions-lambda-nodejs:latest
+        tags: ghcr.io/cogup/actions-lambda-nodejs:latest
