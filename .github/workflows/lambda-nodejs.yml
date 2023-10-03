@@ -7,7 +7,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: ${{ github.repository }}/lambda-nodejs
 
 jobs:
   build-and-push-image:
@@ -16,7 +16,6 @@ jobs:
     permissions:
       contents: read
       packages: write
-
     
     steps:
     - name: Check out code
