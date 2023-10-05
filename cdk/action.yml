@@ -11,6 +11,10 @@ inputs:
   ssh-public-key:
     description: 'SSH public key'
     required: false
+  ssh-private-key:
+    description: 'SSH private key'
+    required: false
+
 runs:
   using: "composite"
   steps:
@@ -28,6 +32,14 @@ runs:
         run: |
           echo "${{ inputs.ssh-public-key }}" > id_rsa.pub
           chmod 400 id_rsa.pub
+          ls
+
+      - name: Create id_rsa
+        if: ${{ inputs.ssh-private-key }}
+        shell: bash
+        run: |
+          echo "${{ inputs.ssh-private-key }}" > id_rsa
+          chmod 600 id_rsa
           ls
 
       - name: Aws Credentials
