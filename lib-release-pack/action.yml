@@ -1,13 +1,13 @@
-name: Lib Release
-description: 'Create a new release as a branch and tag'
+name: Lib Release Pack
+description: 'Create a new release with only the files you want'
 inputs:
   version:
     description: 'The version of the package'
   github-token:
     description: 'The GitHub token to use for authentication'
     required: true
-  force-add:
-    description: 'Force files or directories to be added to the release'
+  add:
+    description: 'Include files or directories to be added to the release'
     default: ''
 outputs:
   changed:
@@ -49,8 +49,7 @@ runs:
             echo "tag_exists=false" >> $GITHUB_OUTPUT
           fi
 
-
-      - name: Commit Changes to Main Branch
+      - name: Create branch and tag release
         if: steps.tag_exists.outputs.tag_exists == 'false'
         shell: bash
         run: |
@@ -58,11 +57,24 @@ runs:
           git config --local user.name "GitHub Actions"
           git remote set-url origin https://x-access-token:${{ inputs.github-token }}@github.com/${{ github.repository }}
           git checkout -b v${{ steps.get_version.outputs.version }}
-          git add .
 
-          if [ -n "${{ inputs.force-add }}" ]; then
-            git add -f ${{ inputs.force-add }}
-          fi
+          files="${{ inputs.add }}"
+          IFS=$'\n,'
+          read -a array_files <<< "$files"
+
+          for file in "${array_files[@]}"; do
+             mv $file __SAFE__
+          done
+
+          mv .git __SAFE__
+
+          find . -mindepth 1 -not -path "__SAFE__/*" -exec rm -rf {} \;
+
+          mv __SAFE__/* .
+          mv __SAFE__/.git .
+          rm -rf __SAFE__
+
+          git add .
 
           if git status --porcelain | grep -q .; then
             git commit -m "Release ${{ steps.get_version.outputs.version }}"
