@@ -75,7 +75,7 @@ runs:
           echo "Files in current directory"
           ls .
 
-          find . -mindepth 1 -not -path "__SAFE__/*" -exec sh -c 'rm -rf "$(echo {} | sed s|^./||)"' \;
+          find . -mindepth 1 -not -path "__SAFE__/*" -exec bash -c 'rm -rf "$0"' {} \;
 
           mv __SAFE__/* .
           mv __SAFE__/.git .
