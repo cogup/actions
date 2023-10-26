@@ -62,6 +62,8 @@ runs:
           IFS=$'\n,'
           read -a array_files <<< "$files"
 
+          mkdir __SAFE__
+
           for file in "${array_files[@]}"; do
              mv $file __SAFE__
           done
