@@ -70,6 +70,8 @@ runs:
 
           mv .git __SAFE__
 
+          ls __SAFE__
+
           find . -mindepth 1 -not -path "__SAFE__/*" -exec rm -rf {} \;
 
           mv __SAFE__/* .
