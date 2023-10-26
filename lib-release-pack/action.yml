@@ -70,7 +70,10 @@ runs:
 
           mv .git __SAFE__
 
+          echo "Files moved to __SAFE__"
           ls __SAFE__
+          echo "Files in current directory"
+          ls .
 
           find . -mindepth 1 -not -path "__SAFE__/*" -exec rm -rf {} \;
 
