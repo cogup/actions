@@ -81,8 +81,8 @@ runs:
 
           echo "Moving files back to root"
 
-          mv $package/* .
-          mv $package/.* .
+          mv "$package/*" .
+          mv "$package/.*" .
           rm -rf $package
 
           echo "Committing changes"
