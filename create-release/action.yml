@@ -82,8 +82,8 @@ runs:
           git commit -m "Release ${{ steps.get_version.outputs.version }}"
 
           echo "Pushing changes"
-          git tag release-${{ steps.get_version.outputs.version }}
-          git push origin release-${{ steps.get_version.outputs.version }} --tags
+          git tag $package
+          git push origin $package --tags
 
       - name: Create Release
         if: steps.tag_exists.outputs.tag_exists == 'false'
