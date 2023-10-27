@@ -75,15 +75,14 @@ runs:
           git checkout -b "release/${{ steps.get_version.outputs.version }}"
           git add .
           git commit -m "Release ${{ steps.get_version.outputs.version }}"
-          git tag ${{ steps.get_version.outputs.version }}
-          git push origin "release/${{ steps.get_version.outputs.version }}" --tags
+          git push origin "release/${{ steps.get_version.outputs.version }}"
 
       - name: Create Release
         if: steps.tag_exists.outputs.tag_exists == 'false'
         shell: bash
         run: |
-          repository=$(echo "${{ github.repository }}" | sed 's/\//-/g')
-          gh release create "$repository-${{ steps.get_version.outputs.version }}" --title "Release ${{ steps.get_version.outputs.version }}" --notes "Release ${{ steps.get_version.outputs.version }}" --repo ${{ github.repository }} --target release/${{ steps.get_version.outputs.version }}
+          repository=$(echo ${{ github.repository }} | cut -d '/' -f 2)
+          gh release create "release-$repository-${{ steps.get_version.outputs.version }}" --title "Release ${{ steps.get_version.outputs.version }}" --notes "Release ${{ steps.get_version.outputs.version }}" --repo ${{ github.repository }} --target release/${{ steps.get_version.outputs.version }}
 
       - name: Remove branch release
         if: steps.tag_exists.outputs.tag_exists == 'false'
