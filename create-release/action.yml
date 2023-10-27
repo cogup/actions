@@ -63,7 +63,7 @@ runs:
 
           mkdir $package
 
-          ls
+          echo "Creating release ${{ steps.get_version.outputs.version }}"
 
           files="${{ inputs.add }}"
           IFS=$'\n,'
@@ -75,16 +75,23 @@ runs:
 
           mv .git $package
 
+          echo "Removing all files except $package"
+
           find . -mindepth 1 -maxdepth 1 ! -name '$package' -exec rm -r {} \;
+
+          echo "Moving files back to root"
 
           mv $package/* .
           mv $package/.* .
           rm -rf $package
 
+          echo "Committing changes"
+
           git add .
 
           git commit -m "Release ${{ steps.get_version.outputs.version }}"
 
+          echo "Pushing changes"
           git tag release-${{ steps.get_version.outputs.version }}
           git push origin release-${{ steps.get_version.outputs.version }} --tags
 
