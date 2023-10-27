@@ -57,15 +57,15 @@ runs:
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
           git remote set-url origin https://x-access-token:${{ inputs.github-token }}@github.com/${{ github.repository }}
-          git checkout -b release-${{ steps.get_version.outputs.version }}
 
-          package="__PACKAGE__${{ steps.get_version.outputs.version }}"
+          package="release-${{ steps.get_version.outputs.version }}"
+          git checkout -b $package
+
+          mkdir $package
 
           files="${{ inputs.add }}"
           IFS=$'\n,'
           read -a array_files <<< "$files"
-
-          mkdir $package
 
           for file in "${array_files[@]}"; do
              mv $file $package
