@@ -82,4 +82,4 @@ runs:
         if: steps.tag_exists.outputs.tag_exists == 'false'
         shell: bash
         run: |
-          gh release create ${{ steps.get_version.outputs.version }} --title "Release ${{ steps.get_version.outputs.version }}" --notes "Release ${{ steps.get_version.outputs.version }}" --repo ${{ github.repository }} --target release-${{ steps.get_version.outputs.version }}
+          gh release create ${{ steps.get_version.outputs.version }} --title "Release ${{ steps.get_version.outputs.version }}" --notes "Release ${{ steps.get_version.outputs.version }}" --repo ${{ github.repository }} --target release/${{ steps.get_version.outputs.version }}
