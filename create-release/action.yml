@@ -89,4 +89,5 @@ runs:
         if: steps.tag_exists.outputs.tag_exists == 'false'
         shell: bash
         run: |
+          cd release-${{ steps.get_version.outputs.version }}
           git push origin --delete "release/${{ steps.get_version.outputs.version }}"
