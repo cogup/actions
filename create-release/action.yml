@@ -58,28 +58,24 @@ runs:
           git config --local user.name "GitHub Actions"
           git remote set-url origin https://x-access-token:${{ inputs.github-token }}@github.com/${{ github.repository }}
 
-          package="release-${{ steps.get_version.outputs.version }}"
-
-          mkdir $package
-
-          echo "Creating release ${{ steps.get_version.outputs.version }}"
+          mkdir release-${{ steps.get_version.outputs.version }}
 
           files="${{ inputs.add }}"
           IFS=$'\n,'
           read -a array_files <<< "$files"
 
           for file in "${array_files[@]}"; do
-             mv $file $package
+             mv $file release-${{ steps.get_version.outputs.version }}
           done
 
-          mv .git $package
+          mv .git release-${{ steps.get_version.outputs.version }}
 
-          cd $package
+          cd release-${{ steps.get_version.outputs.version }}
 
           git checkout -b "release/${{ steps.get_version.outputs.version }}"
           git add .
           git commit -m "Release ${{ steps.get_version.outputs.version }}"
-          git tag $package
+          git tag ${{ steps.get_version.outputs.version }}
           git push origin "release/${{ steps.get_version.outputs.version }}" --tags
 
       - name: Create Release
