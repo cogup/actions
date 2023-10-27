@@ -59,7 +59,6 @@ runs:
           git remote set-url origin https://x-access-token:${{ inputs.github-token }}@github.com/${{ github.repository }}
 
           package="release-${{ steps.get_version.outputs.version }}"
-          git checkout -b $package
 
           mkdir $package
 
@@ -77,13 +76,11 @@ runs:
 
           cd $package
 
+          git checkout -b "release/${{ steps.get_version.outputs.version }}"
           git add .
-
           git commit -m "Release ${{ steps.get_version.outputs.version }}"
-
-          echo "Pushing changes"
           git tag $package
-          git push origin "refs/heads/$package":"refs/heads/$package"
+          git push origin "release/${{ steps.get_version.outputs.version }}" --tags
 
       - name: Create Release
         if: steps.tag_exists.outputs.tag_exists == 'false'
