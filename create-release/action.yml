@@ -75,17 +75,7 @@ runs:
 
           mv .git $package
 
-          echo "Removing all files except $package"
-
-          find . -mindepth 1 -maxdepth 1 ! -name '$package' -exec rm -r {} \;
-
-          echo "Moving files back to root"
-
-          mv "$package/*" .
-          mv "$package/.*" .
-          rm -rf $package
-
-          echo "Committing changes"
+          cd $package
 
           git add .
 
