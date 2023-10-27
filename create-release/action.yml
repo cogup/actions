@@ -1,4 +1,4 @@
-name: Lib Release Pack
+name: Create Release
 description: 'Create a new release with only the files you want'
 inputs:
   version:
@@ -57,42 +57,37 @@ runs:
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
           git remote set-url origin https://x-access-token:${{ inputs.github-token }}@github.com/${{ github.repository }}
-          git checkout -b v${{ steps.get_version.outputs.version }}
+          git checkout -b release-${{ steps.get_version.outputs.version }}
+
+          package="__PACKAGE__${{ steps.get_version.outputs.version }}"
 
           files="${{ inputs.add }}"
           IFS=$'\n,'
           read -a array_files <<< "$files"
 
-          mkdir __SAFE__
+          mkdir $package
 
           for file in "${array_files[@]}"; do
-             mv $file __SAFE__
+             mv $file $package
           done
 
-          mv .git __SAFE__
+          mv .git $package
 
-          echo "Files moved to __SAFE__"
-          ls __SAFE__
-          echo "Files in current directory"
-          ls .
+          find . -mindepth 1 -maxdepth 1 ! -name '$package' -exec rm -r {} \;
 
-          find . -mindepth 1 -maxdepth 1 ! -name '__SAFE__' -exec rm -r {} \;
-
-          mv __SAFE__/* .
-          mv __SAFE__/.git .
-          rm -rf __SAFE__
+          mv $package/* .
+          mv $package/.* .
+          rm -rf $package
 
           git add .
 
-          if git status --porcelain | grep -q .; then
-            git commit -m "Release ${{ steps.get_version.outputs.version }}"
-          fi
+          git commit -m "Release ${{ steps.get_version.outputs.version }}"
 
-          git tag ${{ steps.get_version.outputs.version }}
-          git push origin main --tags
+          git tag release-${{ steps.get_version.outputs.version }}
+          git push origin release-${{ steps.get_version.outputs.version }} --tags
 
       - name: Create Release
         if: steps.tag_exists.outputs.tag_exists == 'false'
         shell: bash
         run: |
-          gh release create ${{ steps.get_version.outputs.version }} --title "Release ${{ steps.get_version.outputs.version }}" --notes "Release ${{ steps.get_version.outputs.version }}" --repo ${{ github.repository }} --target main
+          gh release create ${{ steps.get_version.outputs.version }} --title "Release ${{ steps.get_version.outputs.version }}" --notes "Release ${{ steps.get_version.outputs.version }}" --repo ${{ github.repository }} --target release-${{ steps.get_version.outputs.version }}
