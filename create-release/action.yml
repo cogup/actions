@@ -63,6 +63,8 @@ runs:
 
           mkdir $package
 
+          ls
+
           files="${{ inputs.add }}"
           IFS=$'\n,'
           read -a array_files <<< "$files"
