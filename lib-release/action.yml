@@ -10,8 +10,9 @@ inputs:
     description: 'Force files or directories to be added to the release'
     default: ''
 outputs:
-  changed:
-    description: 'true if changes are detected, false otherwise'
+  release:
+    value: ${{ steps.get_version.outputs.version }}
+    description: 'Release version'
 runs:
   using: "composite"
   steps:

@@ -10,8 +10,9 @@ inputs:
     description: 'Include files or directories to be added to the release'
     default: ''
 outputs:
-  changed:
-    description: 'true if changes are detected, false otherwise'
+  release:
+    value: ${{ steps.get_version.outputs.version }}
+    description: 'Release version'
 runs:
   using: "composite"
   steps:
@@ -75,7 +76,7 @@ runs:
           echo "Files in current directory"
           ls .
 
-          find . -mindepth 1 -not -path "__SAFE__/*" -exec bash -c 'rm -rf "$0"' {} \;
+          find . -mindepth 1 -maxdepth 1 ! -name '__SAFE__' -exec rm -r {} \;
 
           mv __SAFE__/* .
           mv __SAFE__/.git .
