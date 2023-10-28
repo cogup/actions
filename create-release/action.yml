@@ -82,7 +82,7 @@ runs:
         shell: bash
         run: |
           repository=$(echo ${{ github.repository }} | cut -d '/' -f 2)
-          gh release create "$repository" --title "Release ${{ steps.get_version.outputs.version }}" --notes "Release ${{ steps.get_version.outputs.version }}" --repo ${{ github.repository }} --target release/${{ steps.get_version.outputs.version }} --latest
+          gh release create "$repository-${{ steps.get_version.outputs.version }}" --title "Release ${{ steps.get_version.outputs.version }}" --notes "Release ${{ steps.get_version.outputs.version }}" --repo ${{ github.repository }} --target release/${{ steps.get_version.outputs.version }} --latest
 
       - name: Remove branch release
         if: steps.tag_exists.outputs.tag_exists == 'false'
