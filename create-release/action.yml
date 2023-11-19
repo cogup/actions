@@ -10,11 +10,14 @@ inputs:
     description: 'Include files or directories to be added to the release'
     default: ''
   suffix:
-    description: 'Suffix release name, ex: v1.0.1'
+    description: 'Suffix release name, ex: 1.0.1-alpha'
+    default: ''
+  prefix:
+    description: 'Prefix release name, ex: v1.0.1'
     default: ''
 outputs:
   release:
-    value: ${{ inputs.suffix }}${{ steps.get_version.outputs.version }}
+    value: ${{ inputs.prefix}}${{ steps.get_version.outputs.version }}${{ inputs.suffix }}
     description: 'Release version'
 runs:
   using: "composite"
@@ -24,19 +27,19 @@ runs:
         shell: bash
         run: |
           if [ -n "${{ inputs.version }}" ]; then
-            echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT
+            echo "version=${{ inputs.prefix }}${{ inputs.version }}${{ inputs.suffix }}" >> $GITHUB_OUTPUT
           elif [ -f package.json ]; then
-            echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+            echo "version=${{ inputs.prefix }}$(node -p "require('./package.json').version")${{ inputs.suffix }}" >> $GITHUB_OUTPUT
           elif [ -f Cargo.toml ]; then
-            echo "version=$(grep -m1 -oP '(?<=version = \")[^\"]*' Cargo.toml)" >> $GITHUB_OUTPUT
+            echo "version=${{ inputs.prefix }}$(grep -m1 -oP '(?<=version = \")[^\"]*' Cargo.toml)${{ inputs.suffix }}" >> $GITHUB_OUTPUT
           elif [ -f setup.py ]; then
-            echo "version=$(grep -m1 -oP '(?<=version=\")[^\"]*' setup.py)" >> $GITHUB_OUTPUT
+            echo "version=${{ inputs.prefix }}$(grep -m1 -oP '(?<=version=\")[^\"]*' setup.py)${{ inputs.suffix }}" >> $GITHUB_OUTPUT
           elif [ -f version.txt ]; then
-            echo "version=$(cat version.txt)" >> $GITHUB_OUTPUT
+            echo "version=${{ inputs.prefix }}$(cat version.txt)${{ inputs.suffix }}" >> $GITHUB_OUTPUT
           elif [ -f VERSION.txt ]; then
-            echo "version=$(cat VERSION.txt)" >> $GITHUB_OUTPUT
+            echo "version=${{ inputs.prefix }}$(cat VERSION.txt)${{ inputs.suffix }}" >> $GITHUB_OUTPUT
           elif [ -f VERSION.md ]; then
-            echo "version=$(cat VERSION.md)" >> $GITHUB_OUTPUT
+            echo "version=${{ inputs.prefix }}$(cat VERSION.md)${{ inputs.suffix }}" >> $GITHUB_OUTPUT
           fi
 
       - name: Check tag exists
@@ -61,35 +64,35 @@ runs:
           git config --local user.name "GitHub Actions"
           git remote set-url origin https://x-access-token:${{ inputs.github-token }}@github.com/${{ github.repository }}
 
-          mkdir release-${{ inputs.suffix }}${{ steps.get_version.outputs.version }}
+          mkdir release-${{ steps.get_version.outputs.version }}
 
           files="${{ inputs.add }}"
           IFS=$'\n,'
           read -a array_files <<< "$files"
 
           for file in "${array_files[@]}"; do
-             mv $file release-${{ inputs.suffix }}${{ steps.get_version.outputs.version }}
+             mv $file release-${{ steps.get_version.outputs.version }}
           done
 
-          mv .git release-${{ inputs.suffix }}${{ steps.get_version.outputs.version }}
+          mv .git release-${{ steps.get_version.outputs.version }}
 
-          cd release-${{ inputs.suffix }}${{ steps.get_version.outputs.version }}
+          cd release-${{ steps.get_version.outputs.version }}
 
-          git checkout -b "release/${{ inputs.suffix }}${{ steps.get_version.outputs.version }}"
+          git checkout -b "release/${{ steps.get_version.outputs.version }}"
           git add .
-          git commit -m "Release ${{ inputs.suffix }}${{ steps.get_version.outputs.version }}"
-          git push origin "release/${{ inputs.suffix }}${{ steps.get_version.outputs.version }}"
+          git commit -m "Release ${{ steps.get_version.outputs.version }}"
+          git push origin "release/${{ steps.get_version.outputs.version }}"
 
       - name: Create Release
         if: steps.tag_exists.outputs.tag_exists == 'false'
         shell: bash
         run: |
           repository=$(echo ${{ github.repository }} | cut -d '/' -f 2)
-          gh release create "$repository-${{ inputs.suffix }}${{ steps.get_version.outputs.version }}" --title "Release ${{ inputs.suffix }}${{ steps.get_version.outputs.version }}" --notes "Release ${{ inputs.suffix }}${{ steps.get_version.outputs.version }}" --repo ${{ github.repository }} --target release/${{ inputs.suffix }}${{ steps.get_version.outputs.version }} --latest
+          gh release create "$repository-${{ steps.get_version.outputs.version }}" --title "Release ${{ steps.get_version.outputs.version }}" --notes "Release ${{ steps.get_version.outputs.version }}" --repo ${{ github.repository }} --target release/${{ steps.get_version.outputs.version }} --latest
 
       - name: Remove branch release
         if: steps.tag_exists.outputs.tag_exists == 'false'
         shell: bash
         run: |
-          cd release-${{ inputs.suffix }}${{ steps.get_version.outputs.version }}
-          git push origin --delete "release/${{ inputs.suffix }}${{ steps.get_version.outputs.version }}"
+          cd release-${{ steps.get_version.outputs.version }}
+          git push origin --delete "release/${{ steps.get_version.outputs.version }}"
