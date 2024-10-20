@@ -61,6 +61,9 @@ runs:
           latest
           ${{ inputs.tag }}
 
+    - name: ls
+      run: ls -la
+
     - name: Build and push
       uses: docker/build-push-action@v4
       with:
