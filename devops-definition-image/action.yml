@@ -26,10 +26,12 @@ runs:
         path: devops
 
     - name: Modify coggpt.ts with new image tag
+      shell: bash
       run: |
         sed -i "s|458905170631.dkr.ecr.us-east-1.amazonaws.com/coggpt:.*|458905170631.dkr.ecr.us-east-1.amazonaws.com/coggpt:${{ inputs.tag }}\",|" devops/cdk-services/definitions/${{ inputs.definition }}
 
     - name: Commit and push changes
+      shell: bash
       run: |
         cd devops-repo
         git config --global user.name "github-actions[bot]"
@@ -40,9 +42,11 @@ runs:
         git push origin ${{ inputs.repo-name }}-update-definition-image-${{ github.tag }}
 
     - name: Install GitHub CLI
+      shell: bash
       run: sudo apt-get install -y gh
 
     - name: Create Pull Request with GitHub CLI
+      shell: bash
       run: |
         gh auth login --with-token <<< "${{ inputs.token }}"
         gh pr create --repo cogup/devops \
