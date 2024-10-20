@@ -36,10 +36,10 @@ runs:
         cd devops
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git checkout -b ${{ inputs.repo-name }}-update-definition-image-${{ github.tag }}
+        git checkout -b ${{ inputs.name }}-update-definition-image-${{ github.tag }}
         git add cdk-services/definitions/${{ inputs.definition }}
-        git commit -m "Update ${{ inputs.repo-name }} image with tag ${{ inputs.tag }}"
-        git push origin ${{ inputs.repo-name }}-update-definition-image-${{ github.tag }}
+        git commit -m "Update ${{ inputs.name }} image with tag ${{ inputs.tag }}"
+        git push origin ${{ inputs.name }}-update-definition-image-${{ github.tag }}
 
     - name: Install GitHub CLI
       shell: bash
@@ -50,7 +50,7 @@ runs:
       run: |
         gh auth login --with-token <<< "${{ inputs.token }}"
         gh pr create --repo cogup/devops \
-          --head ${{ inputs.repo-name }}-update-definition-image-${{ github.tag }} \
+          --head ${{ inputs.name }}-update-definition-image-${{ github.tag }} \
           --base main \
-          --title "Update ${{ inputs.repo-name }} image to ${{ inputs.tag }}" \
-          --body "This PR updates the ${{ inputs.repo-name }} image in the cdk-services/definitions/${{ inputs.definition }} file to use the tag `${{ inputs.tag }}`"
+          --title "Update ${{ inputs.name }} image to ${{ inputs.tag }}" \
+          --body "This PR updates the ${{ inputs.name }} image in the cdk-services/definitions/${{ inputs.definition }} file to use the tag `${{ inputs.tag }}`"
