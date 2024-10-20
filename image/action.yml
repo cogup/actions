@@ -1,7 +1,7 @@
 name: "Image Deploy"
 description: "Deploy image to AWS ECR"
 inputs:
-  repository-name:
+  name:
     description: "Name of the repository"
     required: true
   context:
@@ -56,7 +56,7 @@ runs:
       id: meta
       uses: docker/metadata-action@v5
       with:
-        images: ${{ steps.aws.outputs.aws-account-id }}.dkr.ecr.${{ inputs.aws-region }}.amazonaws.com/${{ inputs.repository-name }}
+        images: ${{ steps.aws.outputs.aws-account-id }}.dkr.ecr.${{ inputs.aws-region }}.amazonaws.com/${{ inputs.name }}
         tags: |
           latest
           ${{ inputs.tag }}
@@ -67,8 +67,8 @@ runs:
         context: ${{ inputs.context }}
         file: ${{ inputs.file }}
         push: true
-        provenance: false
         tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
         platforms: ${{ inputs.platforms }}
