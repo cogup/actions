@@ -1,11 +1,11 @@
 name: 'Devops Definitions Image'
-description: 'Update coggpt image in devops repo'
+description: 'Update image in devops repo'
 inputs:
   name:
     description: 'Repository name'
     required: true
   tag:
-    description: 'Image tag to update in coggpt.ts'
+    description: 'Image tag to update in definition'
     required: true
   token:
     description: 'GitHub token'
@@ -25,10 +25,10 @@ runs:
         token: ${{ inputs.token }}
         path: devops
 
-    - name: Modify coggpt.ts with new image tag
+    - name: Modify ${{ inputs.definition }} with new image tag
       shell: bash
       run: |
-        sed -i "s|458905170631.dkr.ecr.us-east-1.amazonaws.com/coggpt:.*|458905170631.dkr.ecr.us-east-1.amazonaws.com/coggpt:${{ inputs.tag }}\",|" devops/cdk-services/definitions/${{ inputs.definition }}
+        sed -i "s|458905170631.dkr.ecr.us-east-1.amazonaws.com/${{ inputs.name }}:.*|458905170631.dkr.ecr.us-east-1.amazonaws.com/${{ inputs.name }}:${{ inputs.tag }}\",|" devops/cdk-services/definitions/${{ inputs.definition }}
 
     - name: Commit and push changes
       shell: bash
