@@ -62,6 +62,7 @@ runs:
           ${{ inputs.tag }}
 
     - name: ls
+      shell: bash
       run: ls -la
 
     - name: Build and push
