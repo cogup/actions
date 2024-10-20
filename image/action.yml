@@ -6,7 +6,7 @@ inputs:
     required: true
   context:
     description: Path to the context
-    required: true
+    required: false
   file:
     description: Path to the Dockerfile
     required: false
