@@ -33,7 +33,7 @@ runs:
     - name: Commit and push changes
       shell: bash
       run: |
-        cd devops-repo
+        cd devops
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         git checkout -b ${{ inputs.repo-name }}-update-definition-image-${{ github.tag }}
