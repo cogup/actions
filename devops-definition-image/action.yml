@@ -33,7 +33,7 @@ runs:
     - name: Modify environment variables VERSION
       shell: bash
       run: |
-        sed -i "s|export VERSION=.*|export VERSION=${{ inputs.tag }}|" devops/cdk-services/definitions/${{ inputs.definition }}
+        sed -i "s| VERSION: .*| VERSION: '${{ inputs.tag }}'|" devops/cdk-services/definitions/${{ inputs.definition }}
 
     - name: Commit and push changes
       shell: bash
