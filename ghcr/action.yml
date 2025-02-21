@@ -12,7 +12,6 @@ inputs:
   file:
     description: Path to the Dockerfile
     required: false
-    default: "Dockerfile"
   platforms:
     description: Platforms to build for
     required: false
