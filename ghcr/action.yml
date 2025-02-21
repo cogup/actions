@@ -20,7 +20,7 @@ inputs:
   tag:
     description: Image tag
     required: true
-  github_token:
+  github-token:
     description: GitHub token
     required: true
 
@@ -40,7 +40,7 @@ runs:
       with:
         registry: ghcr.io
         username: ${{ github.actor }}
-        password: ${{ inputs.github_token }}
+        password: ${{ inputs.github-token }}
 
     - name: Extract metadata (tags, labels) for Docker
       id: meta
