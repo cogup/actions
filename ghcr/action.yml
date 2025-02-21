@@ -20,6 +20,9 @@ inputs:
   tag:
     description: Image tag
     required: true
+  github_token:
+    description: GitHub token
+    required: true
 
 runs:
   using: composite
@@ -37,7 +40,7 @@ runs:
       with:
         registry: ghcr.io
         username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+        password: ${{ inputs.github_token }}
 
     - name: Extract metadata (tags, labels) for Docker
       id: meta
