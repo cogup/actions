@@ -31,7 +31,7 @@ runs:
         if [ -f "${{ inputs.deployment }}" ]; then
           echo "path=${{ inputs.deployment }}" >> $GITHUB_ENV
         else
-          echo "path=k8s/apps/${{ inputs.name }}/deployment.yaml" >> $GITHUB_ENV
+          echo "path=apps/${{ inputs.name }}/deployment.yaml" >> $GITHUB_ENV
         fi
 
     - name: Modify deployment with new image tag
@@ -47,7 +47,7 @@ runs:
     - name: Commit and push changes
       shell: bash
       run: |
-        ls k8s/apps/${{ inputs.name }} -la
+        cd k8s
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
         BRANCH_NAME="${{ inputs.name }}-update-deployment-image-${{ inputs.tag }}"
