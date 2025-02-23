@@ -48,10 +48,6 @@ runs:
       shell: bash
       run: |
         ls k8s/apps/${{ inputs.name }} -la
-        echo "----------------"
-        cd k8s
-        ls -la
-
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
         BRANCH_NAME="${{ inputs.name }}-update-deployment-image-${{ inputs.tag }}"
