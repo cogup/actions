@@ -37,12 +37,12 @@ runs:
     - name: Modify deployment with new image tag
       shell: bash
       run: |
-        sed -i "s|ghcr.io/cogup/${{ inputs.name }}:[a-zA-Z0-9._-]*|ghcr.io/cogup/${{ inputs.name }}:${{ inputs.tag }}|" ${{ env.path }}
+        sed -i "s|ghcr.io/cogup/${{ inputs.name }}:[a-zA-Z0-9._-]*|ghcr.io/cogup/${{ inputs.name }}:${{ inputs.tag }}|" k8s/${{ env.path }}
 
     - name: Modify environment variables VERSION
       shell: bash
       run: |
-        sed -i "s|\(VERSION:\).*|\1 '${{ inputs.tag }}'|" ${{ env.path }}
+        sed -i "s|\(VERSION:\).*|\1 '${{ inputs.tag }}'|" k8s/${{ env.path }}
 
     - name: Commit and push changes
       shell: bash
