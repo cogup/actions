@@ -1,0 +1,71 @@
+name: 'k8s deployments Image'
+description: 'Update image in k8s repo'
+inputs:
+  name:
+    description: 'Repository name'
+    required: true
+  tag:
+    description: 'Image tag to update in deployment'
+    required: true
+  token:
+    description: 'GitHub token'
+    required: true
+  deployment:
+    description: 'Path to the deployment file .yml or .yaml files are supported'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout k8s repo
+      uses: actions/checkout@v4
+      with:
+        repository: cogup/k8s
+        ref: main
+        token: ${{ inputs.token }}
+        path: k8s
+
+    - name: Resolve deployment file
+      shell: bash
+      id: deployment
+      run: |
+        if [ -f ${{ inputs.deployment }} ]; then
+          echo "path=${{ inputs.deployment }}" >> $GITHUB_OUTPUT
+        else
+         echo "path=k8s/apps/${{ inputs.name }}/deployment.yaml" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Modify ${{ inputs.deployment }} with new image tag
+      shell: bash
+      run: |
+        sed -i "s|ghcr.io/cogup/${{ inputs.name }}:.*|ghcr.io/cogup/${{ inputs.name }}:${{ inputs.tag }}\",|" ${{ steps.deployment.outputs.path}}
+
+    - name: Modify environment variables VERSION
+      shell: bash
+      run: |
+        sed -i "s| VERSION: .*| VERSION: '${{ inputs.tag }}'|" ${{ steps.deployment.outputs.path}}
+
+    - name: Commit and push changes
+      shell: bash
+      run: |
+        cd k8s
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git checkout -b ${{ inputs.name }}-update-deployment-image-${{ inputs.tag }}
+        git add ${{ steps.deployment.outputs.path}}
+        git commit -m "Update ${{ inputs.name }} image with tag ${{ inputs.tag }}"
+        git push origin ${{ inputs.name }}-update-deployment-image-${{ inputs.tag }}
+
+    - name: Install GitHub CLI
+      shell: bash
+      run: sudo apt-get install -y gh
+
+    - name: Create Pull Request with GitHub CLI
+      shell: bash
+      run: |
+        gh auth login --with-token <<< "${{ inputs.token }}"
+        gh pr create --repo cogup/k8s \
+          --head ${{ inputs.name }}-update-deployment-image-${{ inputs.tag }} \
+          --base main \
+          --title "Update ${{ inputs.name }} image to ${{ inputs.tag }}" \
+          --body "This PR updates the ${{ inputs.name }} image in the ${{ steps.deployment.outputs.path}} file to use the tag `${{ inputs.tag }}`"
