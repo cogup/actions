@@ -47,10 +47,10 @@ runs:
     - name: Commit and push changes
       shell: bash
       run: |
+        ls k8s/apps/${{ inputs.name }} -la
+        echo "----------------"
         cd k8s
         ls -la
-        echo "----------------"
-        ls apps -la
 
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
