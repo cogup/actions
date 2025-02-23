@@ -27,7 +27,6 @@ runs:
 
     - name: Resolve deployment file
       shell: bash
-      id: deployment
       run: |
         if [ -f "${{ inputs.deployment }}" ]; then
           echo "path=${{ inputs.deployment }}" >> $GITHUB_ENV
@@ -49,6 +48,10 @@ runs:
       shell: bash
       run: |
         cd k8s
+        ls -la
+        echo "----------------"
+        ls apps -la
+
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
         BRANCH_NAME="${{ inputs.name }}-update-deployment-image-${{ inputs.tag }}"
