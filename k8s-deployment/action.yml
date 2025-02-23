@@ -12,7 +12,7 @@ inputs:
     required: true
   deployment:
     description: 'Path to the deployment file .yml or .yaml files are supported'
-    required: true
+    required: false
 
 runs:
   using: "composite"
