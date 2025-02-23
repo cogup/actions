@@ -11,7 +11,7 @@ inputs:
     description: 'GitHub token'
     required: true
   deployment:
-    description: 'Path to the deployment file .yml or .yaml files are supported'
+    description: 'Path to deployment file'
     required: false
 
 runs:
