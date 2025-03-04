@@ -28,7 +28,7 @@ runs:
     - name: Resolve deployment file
       shell: bash
       run: |
-        if [ -f "${{ inputs.deployment }}" ]; then
+        if [ -n "${{ inputs.deployment }}" ]; then
           echo "path=${{ inputs.deployment }}" >> $GITHUB_ENV
         else
           echo "path=apps/${{ inputs.name }}/deployment.yaml" >> $GITHUB_ENV
