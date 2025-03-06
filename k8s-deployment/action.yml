@@ -13,6 +13,10 @@ inputs:
   deployment:
     description: 'Path to deployment file'
     required: false
+  reference:
+    description: 'Reference to the deployment file'
+    required: false
+    default: 'image'
 
 runs:
   using: "composite"
@@ -50,7 +54,7 @@ runs:
         cd k8s
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
-        BRANCH_NAME="${{ inputs.name }}-update-deployment-image-${{ inputs.tag }}"
+        BRANCH_NAME="${{ inputs.name }}-${{ inputs.reference }}-update-deployment-image-${{ inputs.tag }}"
         git checkout -b "$BRANCH_NAME"
         git add ${{ env.path }}
         git commit -m "Update ${{ inputs.name }} image with tag ${{ inputs.tag }}"
