@@ -16,7 +16,7 @@ inputs:
   reference:
     description: 'Reference to the deployment file'
     required: false
-    default: 'image'
+    default: 'container'
 
 runs:
   using: "composite"
@@ -57,7 +57,7 @@ runs:
         BRANCH_NAME="${{ inputs.name }}-${{ inputs.reference }}-update-deployment-image-${{ inputs.tag }}"
         git checkout -b "$BRANCH_NAME"
         git add ${{ env.path }}
-        git commit -m "Update ${{ inputs.name }} image with tag ${{ inputs.tag }}"
+        git commit -m "Update ${{ inputs.name }}-${{ inputs.reference }} image with tag ${{ inputs.tag }}"
         git push origin "$BRANCH_NAME"
 
     - name: Install GitHub CLI
@@ -69,7 +69,7 @@ runs:
       run: |
         echo "${{ inputs.token }}" | gh auth login --with-token
         gh pr create --repo cogup/k8s \
-          --head ${{ inputs.name }}-update-deployment-image-${{ inputs.tag }} \
+          --head ${{ inputs.name }}-${{ inputs.reference }}-update-deployment-image-${{ inputs.tag }} \
           --base main \
-          --title "Update ${{ inputs.name }} image to ${{ inputs.tag }}" \
-          --body "This PR updates the ${{ inputs.name }} image in the ${{ env.path }} file to use the tag `${{ inputs.tag }}`"
+          --title "Update ${{ inputs.name }}-${{ inputs.reference }} image to ${{ inputs.tag }}" \
+          --body "This PR updates the ${{ inputs.name }}-${{ inputs.reference }} image in the ${{ env.path }} file to use the tag `${{ inputs.tag }}`"
